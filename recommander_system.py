@@ -23,7 +23,6 @@ def recommander(resources,user_profile):
     #we created a formula
     #similarity matters 0.6% ; topic matters most
     #preference matters 0.1%
-    #difficulty matters 0.3%
     for pair in sim_res_value:
         idx=pair[0]
         if viable_resource[idx]["format"]==user_profile["resource"]:  #if preference amtch then preference score is 1

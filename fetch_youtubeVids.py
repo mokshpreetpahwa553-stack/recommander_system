@@ -90,6 +90,8 @@ def youtube_items_to_resources(items):
     print(f"maxscore->{maxscore}")
     print(f"minscore->{minscore}")
 
+    #normalising scores
+    scores = scores-scores.mean()/scores.std()
     scores = np.array(scores)
     low_cut = np.percentile(scores, 33)
     high_cut = np.percentile(scores, 67)
