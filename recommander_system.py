@@ -1,6 +1,7 @@
 #from user_resource_difficulty import difficulty_gap
 from goal_topic_similarity import similarity
 from fetch_youtubeVids import fetch_youtubeVideos
+from fetch_articles import fetch_articles
 from colorama import init , Fore
 import numpy as np
 def recommander(resources,user_profile):
@@ -134,27 +135,32 @@ if __name__=="__main__":
 
     user_profile=user_profiling(goal,current_level,resource)
 
-    level=["begineer","intermediate","advanced"]
-    modifiedgoal=goal+" "+level[current_level-1]
+    level=["beginner","intermediate","advanced"]
+    modifiedgoal=f"{goal} for {level[current_level-1]} level"
     
-    resources = fetch_youtubeVideos(modifiedgoal)
+    if resource=='videos':
+        resources = fetch_youtubeVideos(modifiedgoal)
+    elif resource == 'article':
+        resources = fetch_articles(modifiedgoal)
+
     recommandations=[]
+    
     if resources:
-        recommandations=recommander(resources,user_profile)
+        print("yo")
+        #recommandations=recommander(resources,user_profile)
     else:
         print("No resources")
 
     print("\n")
-    for r in recommandations:
+    for r in resources:
         print(f"{Fore.MAGENTA}id: {Fore.WHITE}{r.get('id','')}\n"
               f"{Fore.MAGENTA}title: {Fore.WHITE}{r.get('title','')}\n"
-              f"{Fore.MAGENTA}title: {Fore.WHITE}{r.get('topic','')}\n"
               f"{Fore.MAGENTA}description: {Fore.WHITE}{r.get('description','')}\n"
               f"{Fore.MAGENTA}difficulty_score: {Fore.WHITE}{r.get('difficulty_score','')}\n"
               f"{Fore.MAGENTA}difficulty_level: {Fore.WHITE}{r.get('difficulty_category','')}\n"
               f"{Fore.MAGENTA}format: {Fore.WHITE}{r.get('format','')}\n"
               f"{Fore.MAGENTA}URL: {Fore.WHITE}{r.get('url','')}\n"
-              f"{Fore.MAGENTA}languag: {Fore.WHITE}{r.get('language','')}\n\n")
+              f"{Fore.MAGENTA}language: {Fore.WHITE}{r.get('language','')}\n\n")
 
 
         

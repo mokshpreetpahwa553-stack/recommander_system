@@ -15,32 +15,6 @@ def youtube_items_to_resources(items):
     """
     Transform raw YouTube search API items into a list of 'resource' dicts
     used by the recommender."""
-
-    #following keywords are used to map topic to each resource video
-    algebra_keywords=["algebra", "equation", "equations", "solve", "x", "linear", "quadratic", "polynomial", "factor", "factoring", "root", "roots", "expression", "simultaneous", "system","equations"]
-    arithmetic_mental_math_keywords=["arithmetic", "addition", "subtraction", "multiplication", "division", "mental"," math", "mentalmath", "trick", "tricks", "shortcut", "shortcuts", "fast", "faster", "speed"]
-    calculus_keywords=["calculus", "derivative", "derivatives", "integral", "integrals", "integration", "differentiate", "differentiation", "limit", "limits", "d/dx", "antiderivative", "chain"]
-    geometry_keywords=["geometry", "triangle", "triangles", "circle", "circles", "area", "perimeter", "angle", "angles", "polygon", "square", "rectangle", "coordinate", "coordinates", "shape", "shapes"]
-    probability_stats_keywords=["probability", "statistics", "statistic", "stats", "random", "chance", "permutation", "permutations", "combination", "combinations", "binomial", "distribution", "expectation", "mean", "median", "variance"]
-    number_theory_keywords=["number theory", "prime", "primes", "divisible", "divisibility", "mod", "modulo", "remainder", "gcd", "lcm", "factorization"]
-    puzzles_brainteasers_keywords=["puzzle", "puzzles", "riddle", "riddles", "brain teaser", "brain","teasers", "brain-teaser", "test", "iq", "logic","puzzle", "puzzles", "brainteaser", "challenge", "challenging","riddle"]
-    exam_prep_keywords=["sat", "gcse", "neet", "jee", "exam", "exams", "prep", "preparation", "paper", "papers", "mock", "practice" ,"test", "official exam", "math","section"]
-    olympiad_competition_keywords=["olympiad", "imo", "amc", "aime", "contest", "competition", "hardest","problem"]
-    general_math_keywords=["math", "maths", "mathematics"]
-
-
-    topic_keywords={
-        "algebra": algebra_keywords,
-        "arithmetic_mental_math": arithmetic_mental_math_keywords,
-        "calculus": calculus_keywords,
-        "general_math": general_math_keywords,
-        "probability_stats": probability_stats_keywords,
-        "number_theory": number_theory_keywords,
-        "geometry": geometry_keywords,
-        "puzzles_brainteasers": puzzles_brainteasers_keywords,
-        "exam_prep": exam_prep_keywords,
-        "olympiad_competition": olympiad_competition_keywords,
-    }
     
     full_text_of_each_video=[]
     for item in items:
@@ -50,22 +24,7 @@ def youtube_items_to_resources(items):
         desc=snip.get("description","")
         channel=snip.get("channelTitle","")
 
-        full_text_of_each_video.append((title+" "+desc).lower())
-
-        topic_counts={
-        "UNKNOWN": 0,
-        "algebra": 0,
-        "arithmetic_mental_math": 0,
-        "calculus": 0,
-        "general_math": 0,
-        "probability_stats": 0,
-        "number_theory": 0,
-        "geometry": 0,
-        "puzzles_brainteasers": 0,
-        "exam_prep": 0,
-        "olympiad_competition": 0,
-    }
-    
+        full_text_of_each_video.append((title+" "+desc).lower())    
        
         resources.append({
             "id": f"yt_{vid}",
@@ -77,7 +36,6 @@ def youtube_items_to_resources(items):
             "format": "video",
             "url": f"https://www.youtube.com/watch?v={vid}",
             "source": channel,
-            "est_duration_min": 0,
             "language": snip.get("defaultAudioLanguage", "en"),
         })
 
