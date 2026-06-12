@@ -10,21 +10,25 @@ YOUTUBE_API_VERSION='v3'
 # Build a YouTube API client using the API key
 youtube=build(YOUTUBE_API_SERVICE_NAME,YOUTUBE_API_VERSION,developerKey=API_KEY)
 
+results_per_query=20
+
+
 def youtube_items_to_resources(items):
     resources=[]
     """
     Transform raw YouTube search API items into a list of 'resource' dicts
     used by the recommender."""
-    
-    full_text_of_each_video=[]
+
     for item in items:
         vid=item["id"]["videoId"]
         snip=item["snippet"]
         title=snip["title"]
         desc=snip.get("description","")
-        channel=snip.get("channelTitle","")
+        '''channel=snip.get("channelTitle","")'''
+        url=f"https://www.youtube.com/watch?v={vid}"
+        language=snip.get("defaultAudioLanguage", "en")
 
-        full_text_of_each_video.append((title+" "+desc).lower())    
+        '''full_text_of_each_video.append((title+" "+desc).lower())    
        
         resources.append({
             "id": f"yt_{vid}",
@@ -37,10 +41,11 @@ def youtube_items_to_resources(items):
             "url": f"https://www.youtube.com/watch?v={vid}",
             "source": channel,
             "language": snip.get("defaultAudioLanguage", "en"),
-        })
+        })'''
+        resources.append((title,desc,"video",None,None,url,"youtube",language))
 
     
-    # Load model once when program starts
+    '''# Load model once when program starts
     model = joblib.load('text_scorer_pipeline.pkl')
     scores=model.predict(full_text_of_each_video)
     minscore=min(scores)
@@ -62,12 +67,12 @@ def youtube_items_to_resources(items):
         elif scores[i]>=high_cut:
             resources[i]["difficulty_category"]=3
         else:
-            resources[i]["difficulty_category"]=2
+            resources[i]["difficulty_category"]=2'''
 
     return resources
 
 
-def fetch_youtubeVideos(query: str, max_results=100):
+def fetch_youtubeVideos(query, max_results=results_per_query):
 
     """
     Call YouTube Data API search.list to get video search results and
@@ -81,6 +86,7 @@ def fetch_youtubeVideos(query: str, max_results=100):
     #   q         = search text
     #   type      = only videos (not channels/playlists)
 
+
     try:
         request = youtube.search().list(
             part="id,snippet",
@@ -93,13 +99,14 @@ def fetch_youtubeVideos(query: str, max_results=100):
         response=request.execute()
 
         if not response.get('items'):
-            print(f"No results for '{query}'")
-            return [] 
-        
+            return f"No results for '{query}'"
+
         return youtube_items_to_resources(response["items"])
+        
     
     except Exception as e:
-        print(f"API ERROR: {e}")
-        return []  # Safe fallback
+        return f"API ERROR: {e}"
+    
+
 
 
