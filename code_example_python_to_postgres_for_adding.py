@@ -1,13 +1,7 @@
-import psycopg2
+from db_config import get_connection
 
 #connecting to postgres
-conn = psycopg2.connect(
-    host="localhost",
-    database="recommander_system",
-    user='postgres',
-    password="Sachin1130!",
-    port=5432
-)
+conn = get_connection()
 
 #creating cursor
 cur=conn.cursor()

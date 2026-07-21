@@ -35,10 +35,11 @@ def similarity(resources,user_profile):
 
     index_sims=[] #list contain index of resourses as index and value as similarity value
     for idx,s in enumerate(sims):
+        resources[idx]["score"]=s
         index_sims.append((idx,s))
     
 
-    return sorted(index_sims,key=lambda x:x[1],reverse=True)[:20] #, np.argsort(sims)[::-1]  #returning list of tuples with index of resouce and similarity value in desc order and index of resources in descending order
+    return sorted(resources,key=lambda x:x["score"],reverse=True)[:20] #, np.argsort(sims)[::-1]  #returning list of tuples with index of resouce and similarity value in desc order and index of resources in descending order
  
 
 

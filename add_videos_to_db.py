@@ -43,7 +43,7 @@ cur=conn.cursor()
     "python web development"
 ]'''
 
-queries = [
+'''queries = [
     "python lambda functions tutorial",
     "python list comprehension tutorial",
     "python regex tutorial",
@@ -64,8 +64,8 @@ queries = [
     "python multithreading tutorial",
     "python design patterns tutorial",
     "python type hints tutorial",
-]
-
+]'''
+queries = ["python variables"]
 k=0
 for query in queries:
     videos = fetch_youtubeVideos(query)

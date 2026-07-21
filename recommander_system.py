@@ -4,6 +4,9 @@ from fetch_yt_from_postgres  import fetch_resources
 #from fetch_articles import fetch_articles
 from colorama import init , Fore
 import numpy as np
+from output_difficultyLevel_sort import user_is_begineer, user_is_intermediate, user_is_advanced
+
+
 def recommander(resources,user_profile):
 
     #diff_score=difficulty_gap(user_profile,resources) #dict, with real ids as key and score as value
@@ -17,14 +20,14 @@ def recommander(resources,user_profile):
             
 
     #sim_res_value is list of tuples with idx and cosine sim value in desc order
-    sim_res_value=similarity(resources,user_profile)
+    resources_with_scores=similarity(resources,user_profile)
 
-    combined_results=[]
+    #resources_with_scores=[]
 
     #we created a formula
     #similarity matters 0.6% ; topic matters most
     #preference matters 0.1%
-    for pair in sim_res_value:
+    '''for pair in sim_res_value:
         idx=pair[0]
         if resources[idx]["format"]==user_profile["resource"]:  #if preference amtch then preference score is 1
             p=1.00
@@ -33,9 +36,22 @@ def recommander(resources,user_profile):
         
         score=(0.6 * pair[1]) + (0.4 * p) #+ (0.3 * diff_score[viable_resource[idx]["id"]])
         combined_results.append((idx,score))
+    '''
 
-    sorted_combined_results=sorted(combined_results,key=lambda x: x[1],reverse=True)[:10] #sort acc to result in desc order then take top 20
-    sorted_along_diff=sorted(sorted_combined_results, key=lambda x:resources[x[0]]["difficulty_category"]) #sorting according to difficulty level for dictionaries in viable resources
+    #updating scores of resources
+    for resource in resources_with_scores:
+        if resource["format"]==user_profile["resource"]:  #if preference amtch then preference score is 1
+            p=1.00
+        else:   #otherwise 0.3
+            p=0.3
+        
+        score=(0.6 * resource["score"]) + (0.4 * p) #+ (0.3 * diff_score[viable_resource[idx]["id"]])
+        resource["score"]=score
+
+    top_resources=sorted(resources_with_scores,key=lambda x: x["score"],reverse=True)[:10] #sort acc to result in desc order then take top 20
+    
+
+    '''sorted_along_diff=sorted(sorted_combined_results, key=lambda x:resources[x[0]]["difficulty_category"]) #sorting according to difficulty level for dictionaries in viable resources
 
     sorted_acc_score_within_distances=[] #empty list, it will contain list of tuples with sorted along score in desc order, within each difficulty level
 
@@ -52,17 +68,48 @@ def recommander(resources,user_profile):
         sort_scores=sorted(same_difficulty,key=lambda x:x[1],reverse=True) #sorting scores 
         sorted_acc_score_within_distances.extend(sort_scores)   #then putting them in sorted_acc_score_within_distances, sorted according to scores within each difficulty
         i=j   
-    
 
     recommanded=[]
     #for pair in sorted_acc_score_within_distances[:10]:  #out of 20 show top 10
     #   idx=pair[0]
-    #  recommanded.append(viable_resource[idx])'''
+    #  recommanded.append(viable_resource[idx])
     for pair in sorted_combined_results[:10]:
         idx=pair[0]
-        recommanded.append(resources[idx])
+        recommanded.append(resources[idx])'''
+
     
-    return recommanded
+    if user_profile["current_level"]==1:
+        recommandations=user_is_begineer(top_resources)
+    elif user_profile["current_level"]==2:
+        recommandations=user_is_intermediate(top_resources)
+    else:
+        recommandations=user_is_advanced(top_resources)    
+
+    '''i=0
+        while i < len(recommandations):
+        idx=recommandations[i][0]
+        j=i+1
+        same_difficulty=[]   
+        same_difficulty.append(recommandations[i])
+        while j<len(recommandations) and (resources[idx]["difficulty_category"]==resources[recommandations[j][0]]["difficulty_category"]):
+            same_difficulty.append(recommandations[j])
+            j+=1
+        sort_scores=sorted(same_difficulty,key=lambda x:x[1],reverse=True)
+        recommandations.extend(sort_scores)
+        i=j
+    '''
+
+    i,j=0,0
+    sorted_recommandations=[]
+    
+    while i < len(recommandations):
+        while j < len(recommandations) and (recommandations[i]["difficulty_category"]==recommandations[j]["difficulty_category"]):
+            j+=1
+        sort_scores=sorted(recommandations[i:j],key=lambda x:x["score"],reverse=True)
+        sorted_recommandations.extend(sort_scores)
+        i=j
+
+    return sorted_recommandations
         
 
 def user_profiling(goal,level,pref_format):
@@ -138,8 +185,9 @@ if __name__=="__main__":
     level=["beginner","intermediate","advanced"]
     modifiedgoal=f"{goal} for {level[current_level-1]} level"
     
-    resources=fetch_resources()
-
+    if resource=="videos":
+        resources=fetch_resources()
+        
     recommandations=[]
     
     if resources:

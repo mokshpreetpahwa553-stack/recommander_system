@@ -1,0 +1,9 @@
+colorama
+google-api-python-client
+joblib
+numpy
+pandas
+psycopg2-binary
+requests
+scikit-learn
+sentence-transformers

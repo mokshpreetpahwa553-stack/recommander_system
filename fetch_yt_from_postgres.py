@@ -37,7 +37,8 @@ def fetch_resources():
             "url": row[5],
             "source": row[6],
             "language": row[7],
-            "embedding": row[8]
+            "embedding": row[8],
+            "score": 0
         })
 
     return resources
