@@ -17,7 +17,7 @@ def youtube_items_to_resources(items):
     resources=[]
     """
     Transform raw YouTube search API items into a list of 'resource' dicts
-    used by the recommender."""
+    used by thcd e recommender."""
 
     for item in items:
         vid=item["id"]["videoId"]

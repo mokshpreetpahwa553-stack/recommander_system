@@ -1,13 +1,19 @@
 import joblib
 import numpy as np
+import psycopg2
 from sentence_transformers import SentenceTransformer
 import time
 
-from db_config import get_connection
 
 def difficulty_score():
     #fetching all resources
-    conn = get_connection()
+    conn = psycopg2.connect(
+    host="localhost",
+    database="recommander_system",
+    user='postgres',
+    password="Sachin1130!",
+    port=5432
+    )
 
     cur=conn.cursor()
 

@@ -10,29 +10,20 @@ def newsapi_items_to_resources(items):
     full_text_of_each_article = []
 
     for article in items:
-        title=article.get("title","")
-        desc = article.get("description","")
+        title=article.get("title") or ""
+        desc = article.get("description") or ""
         url = article.get("url","")
         source = article.get("source", {}).get("name", "")
         content=article.get("content","")
         full_text_of_each_article.append((title + " " + desc).lower())
-        
-        article_id = "art_" + hashlib.md5(url.encode()).hexdigest()[:10]
+        language=article.get("language","en")
+        #article_id = "art_" + hashlib.md5(url.encode()).hexdigest()[:10]
 
-        resources.append({
-                "id": article_id,
-                "title": title,
-                "description": desc,
-                "difficulty_score": None,
-                "difficulty_category": None,
-                "format": "article",
-                "url": url,
-                "source": source,
-                "language": "en",
-            })
+        resources.append((title,desc,"article",None,None,url,source,language))
+
         
 
-    #full_text_of_each_article=full_text_of_each_article.lower()
+    """#full_text_of_each_article=full_text_of_each_article.lower()
         # Load model once when program starts
     model = joblib.load('text_scorer_pipeline.pkl')
     scores=model.predict(full_text_of_each_article)
@@ -41,12 +32,13 @@ def newsapi_items_to_resources(items):
     print(f"maxscore->{maxscore}")
     print(f"minscore->{minscore}")
 
+    print("bnormal")
     #normalising scores
     scores = scores-scores.mean()/scores.std()
     scores = np.array(scores)
     low_cut = np.percentile(scores, 33)
     high_cut = np.percentile(scores, 67)
-
+    print("anormal")
     #assigining categories on predicted score by linear regression model
     for i in range(len(scores)):
         resources[i]["difficulty_score"]=scores[i]
@@ -57,7 +49,7 @@ def newsapi_items_to_resources(items):
         else:
             resources[i]["difficulty_category"]=2
 
-    print("conversion done")
+    print("conversion done")"""
     return resources
 
 def fetch_articles(query: str, max_results=100):
@@ -75,7 +67,7 @@ def fetch_articles(query: str, max_results=100):
         "q": query,
         "language": "en",
         "sortBy": "relevancy",
-        "pageSize": min(max_results, 100),
+        "pageSize": min(max_results, 50),
     }
 
     headers = {
@@ -88,8 +80,8 @@ def fetch_articles(query: str, max_results=100):
         data = response.json()
 
         if not data.get("articles"):
-            print(f"No article results for '{query}'")
-            return []
+            return f"No article results for '{query}'"
+            
 
         print("TO next func")
         return newsapi_items_to_resources(data["articles"])

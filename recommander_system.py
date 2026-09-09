@@ -1,6 +1,8 @@
+from dotenv import load_dotenv
+load_dotenv()
 #from user_resource_difficulty import difficulty_gap
 from goal_topic_similarity import similarity
-from fetch_yt_from_postgres  import fetch_resources
+from fetch_resources_from_postgres  import fetch_resources
 #from fetch_articles import fetch_articles
 from colorama import init , Fore
 import numpy as np
@@ -149,7 +151,7 @@ def user_profiling(goal,level,pref_format):
 
 
 
-if __name__=="__main__":
+def recommanderSystem():
 
     init(autoreset=True)
     #taking input for goal 
@@ -186,7 +188,9 @@ if __name__=="__main__":
     modifiedgoal=f"{goal} for {level[current_level-1]} level"
     
     if resource=="videos":
-        resources=fetch_resources()
+        resources=fetch_resources(resource)
+    elif resource=="article":
+        resources=fetch_resources(resource)
         
     recommandations=[]
     
@@ -205,3 +209,10 @@ if __name__=="__main__":
               f"{Fore.MAGENTA}format: {Fore.WHITE}{r.get('format','')}\n"
               f"{Fore.MAGENTA}URL: {Fore.WHITE}{r.get('url','')}\n"
               f"{Fore.MAGENTA}language: {Fore.WHITE}{r.get('language','')}\n\n")
+
+    return goal,resource
+
+if __name__ == "__main__":
+    recommanderSystem()
+
+    
