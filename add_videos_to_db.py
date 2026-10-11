@@ -1,13 +1,18 @@
 import psycopg2
 from fetch_youtubeVids_using_api import fetch_youtubeVideos
 from difficluty_scoreANDembedding import difficulty_score,embedding
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+DATABASE_PASS = os.getenv("DATABASE_PASSWORD")
 
 #connecting to postgres
 conn = psycopg2.connect(
     host="localhost",
     database="recommander_system",
     user='postgres',
-    password="Sachin1130!",
+    password=DATABASE_PASS,
     port=5432
 )
 
@@ -2099,7 +2104,7 @@ print("Insertion done!")
 cur.execute(
     """
     WITH ranked AS (
-    SELECT ctid,ROW_NUMBER() OVER (PARTITION BY url ORDER BY display_id) AS rn FROM resources)
+    SELECT ctid,ROW_NUMBER() OVER (PARTITION BY url ORDER BY resource_id) AS rn FROM resources)
     DELETE FROM resources
     WHERE ctid IN (
     SELECT ctid

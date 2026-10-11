@@ -1,13 +1,21 @@
 import psycopg2
+import os
+from dotenv import load_dotenv
 
 def extraction(resource_type):
-    conn=psycopg2.connect(
+    
+    load_dotenv()
+    DATABASE_PASS = os.getenv("DATABASE_PASSWORD")
+
+    #connecting to postgres
+    conn = psycopg2.connect(
         host="localhost",
         database="recommander_system",
-        user="postgres",
-        password="Sachin1130!",
-        port = 5432
+        user='postgres',
+        password=DATABASE_PASS,
+        port=5432
     )
+
     cur=conn.cursor()
 
     if resource_type=='videos':

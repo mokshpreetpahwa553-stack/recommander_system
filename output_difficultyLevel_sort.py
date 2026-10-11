@@ -4,7 +4,6 @@ def user_is_begineer(resources):
     return sorted(resources, key=lambda x: x["difficulty_category"])
 
 def user_is_intermediate(resources):
-    print("below is resources!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     print(resources)
     print(resources[0])
     print(type(resources[0]))

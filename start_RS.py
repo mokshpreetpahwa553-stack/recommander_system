@@ -1,7 +1,7 @@
-from user_input_credentils import sign_in,sign_up
+from user_input_credentials import sign_in,sign_up
 from recommander_system import recommanderSystem
 import psycopg2
-
+import sys
 #connecting to postgres
 conn = psycopg2.connect(
     host="localhost",
@@ -14,18 +14,28 @@ conn = psycopg2.connect(
 cur=conn.cursor()
 
 if __name__ == "__main__":
-    user_choice = input("If you have an account->sign in, otherwise sign up or use as guest: ")
+    user_choice = input("If you have an account->sign_in, otherwise sign_up or use as guest: ")
 
     if user_choice == "sign_in":
-        userId=sign_in()
+        while True:
+            userId=sign_in()
+            if userId!=-1:
+                break
+
     elif user_choice=="sign_up":
         sign_up()
         userId=sign_in()
+
     elif user_choice=="guest":
         recommanderSystem()
 
+    #password entered incorrect for 3 times 
+    if userId=="incorrect password limit":
+        print("incorrect password limit\nTry again later!!\n\n")
+        sys.exit()
+
     while True:
-        choice = input("\n\n1 - recommander_system\n2 - View search history\n3 - View watch history\n4 - View read history\n5 - Quit\nINPUT :")
+        choice = input("\n\n1 - recommander_system\n2 - View search history\n3 - Quit\nINPUT :")
 
         if choice=="1":
             query,resource_type_used=recommanderSystem()
@@ -49,7 +59,7 @@ if __name__ == "__main__":
 
             conn.commit()
 
-        elif choice=="5":
+        elif choice=="3":
             print("THANKS!!")
             break
 

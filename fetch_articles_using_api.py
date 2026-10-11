@@ -2,7 +2,14 @@ import requests
 import hashlib
 import joblib
 import numpy as np
-NEWS_API_KEY = '44fb3233ded44c939c7a2945222f4f7a'
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.getenv("ARTICLES_API_KEY")
+
+if not API_KEY:
+    raise ValueError("Missing ARTICLE_API_KEY. Add it to your .env file.")
 
 def newsapi_items_to_resources(items):
     print("Entered in conversion!")

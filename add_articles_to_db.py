@@ -1,13 +1,18 @@
 import psycopg2
 from fetch_articles_using_api import fetch_articles
 from difficluty_scoreANDembedding import difficulty_score,embedding
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+DATABASE_PASS = os.getenv("DATABASE_PASSWORD")
 
 #connecting to postgres
 conn = psycopg2.connect(
     host="localhost",
     database="recommander_system",
     user='postgres',
-    password="Sachin1130!",
+    password=DATABASE_PASS,
     port=5432
 )
 

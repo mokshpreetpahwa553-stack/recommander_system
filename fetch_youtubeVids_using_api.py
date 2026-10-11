@@ -2,8 +2,15 @@ from googleapiclient.discovery import build
 import numpy as np
 import joblib
 from sklearn.pipeline import Pipeline 
+import os
+from dotenv import load_dotenv
 
-API_KEY="AIzaSyAHgsQZOa68pTMdhDAMr4GteG1-m8YLhAQ"
+load_dotenv()
+API_KEY = os.getenv("YOUTUBE_API_KEY")
+
+if not API_KEY:
+    raise ValueError("Missing YOUTUBE_API_KEY. Add it to your .env file.")
+
 YOUTUBE_API_SERVICE_NAME="youtube"
 YOUTUBE_API_VERSION='v3'
 

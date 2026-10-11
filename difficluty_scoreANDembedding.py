@@ -3,23 +3,31 @@ import numpy as np
 import psycopg2
 from sentence_transformers import SentenceTransformer
 import time
+import os
+from dotenv import load_dotenv
+
 
 
 def difficulty_score():
-    #fetching all resources
+
+    load_dotenv()
+    DATABASE_PASS = os.getenv("DATABASE_PASSWORD")
+
+    #connecting to postgres
     conn = psycopg2.connect(
-    host="localhost",
-    database="recommander_system",
-    user='postgres',
-    password="Sachin1130!",
-    port=5432
+        host="localhost",
+        database="recommander_system",
+        user='postgres',
+        password=DATABASE_PASS,
+        port=5432
     )
+
 
     cur=conn.cursor()
 
     cur.execute(
         """
-        SELECT display_id,title,description FROM resources 
+        SELECT resource_id,title,description FROM resources 
         """
     )
     full_text=[]
@@ -66,7 +74,7 @@ def difficulty_score():
     cur.executemany(
         """
         UPDATE resources SET difficulty_score = %s, difficulty_category = %s 
-        WHERE display_id = %s
+        WHERE resource_id = %s
         """,
         updates
     )

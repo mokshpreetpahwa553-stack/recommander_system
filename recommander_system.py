@@ -115,36 +115,11 @@ def recommander(resources,user_profile):
         
 
 def user_profiling(goal,level,pref_format):
-    #following list would contain keywords that would map up intent of user
-    practice_intent=["quiz","question","test","practice","challenge","sheet"]
-    understand_intent=["understand","why","explain","concept","theory"]
-    examprep_intent=["sat","exam","jee","test prep","advance","neet","gcse"]
-    puzzle_intent=["puzzle","riddle","brain","teaser","iq"]
-
-    UNKNOWN,practice,understand,exam_prep,puzzle=0,0,0,0,0
-
-    words=goal.lower().split()
-    for g in words:
-        if g in practice_intent:
-            practice+=1
-        elif g in understand_intent:
-            understand+=1
-        elif g in examprep_intent:
-            exam_prep+=1
-        elif g in puzzle_intent:
-            puzzle+=1
-    
-    intents=["UNKNOWN","practice","understand","exam_prep","puzzle"]
-
-    max_intent=np.argmax([UNKNOWN,practice,understand,exam_prep,puzzle])
-    intent=intents[max_intent]
-
 
     user_profile={
         "goal": goal,
         "current_level": level,
         "resource": pref_format,
-        "intent": intent,
     }
     print(user_profile)
     return user_profile
@@ -156,6 +131,12 @@ def recommanderSystem():
     init(autoreset=True)
     #taking input for goal 
     goal=input("Enter goal: ")
+
+    while True:
+        if not goal:
+            print("please enter a goal")
+        else:
+            break
 
     #taking current level, prompting user until user enters value 1-3
     while True:
